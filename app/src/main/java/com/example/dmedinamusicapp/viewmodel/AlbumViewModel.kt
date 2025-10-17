@@ -18,19 +18,48 @@ class AlbumViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                _albums.value = RetrofitInstance.api.getAlbums()
+                println("→ Cargando lista de álbumes desde la API")
+                val response = RetrofitInstance.api.getAlbums()
+                _albums.value = response
+                println("→ Lista de álbumes cargada: ${response.size} álbumes")
             } catch (e: Exception) {
-
+                println("→ Error al cargar álbumes: ${e.javaClass.simpleName} - ${e.message}")
+                _albums.value = emptyList()
             }
         }
     }
 
     fun loadAlbumById(id: String) {
         viewModelScope.launch {
+            println("→ Ejecutando loadAlbumById con ID: $id")
             try {
-                _selectedAlbum.value = RetrofitInstance.api.getAlbumById(id)
+                val album = RetrofitInstance.api.getAlbumById(id)
+
+                if (album.title.isBlank() || album.artist.isBlank()) {
+                    println("→ Álbum recibido pero incompleto: $album")
+                    _selectedAlbum.value = Album(
+                        id = id,
+                        title = "Álbum no disponible",
+                        artist = "Desconocido",
+                        description = "No se pudo cargar la información del álbum.",
+                        image = "",
+                        tracks = emptyList()
+                    )
+                } else {
+                    println("→ Álbum recibido: ${album.title}")
+                    _selectedAlbum.value = album
+                }
+
             } catch (e: Exception) {
-                _selectedAlbum.value = null
+                println("→ Error al cargar álbum: ${e.javaClass.simpleName} - ${e.message}")
+                _selectedAlbum.value = Album(
+                    id = id,
+                    title = "Error al cargar",
+                    artist = "Desconocido",
+                    description = "Hubo un problema al obtener los datos del álbum.",
+                    image = "",
+                    tracks = emptyList()
+                )
             }
         }
     }
