@@ -24,16 +24,16 @@ fun MiniPlayer(album: Album) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
-            .padding(horizontal = 12.dp, vertical = 8.dp), // separa del borde inferior
+            .height(70.dp)
+            .padding(horizontal = 18.dp),
         color = Color(0xFF6A1B9A),
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        shadowElevation = 8.dp
+        shape = RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp),
+        shadowElevation = 10.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = 15.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

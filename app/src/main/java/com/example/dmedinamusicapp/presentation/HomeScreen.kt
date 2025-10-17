@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
@@ -30,6 +29,7 @@ import com.example.dmedinamusicapp.data.Album
 import com.example.dmedinamusicapp.navigation.Screen
 import com.example.dmedinamusicapp.viewmodel.AlbumViewModel
 
+
 @Composable
 fun HomeScreen(navController: NavController, viewModel: AlbumViewModel) {
     val albums by viewModel.albums.collectAsState()
@@ -47,7 +47,7 @@ fun HomeScreen(navController: NavController, viewModel: AlbumViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 64.dp) // espacio para el MiniPlayer
+                .padding(bottom = 80.dp) // espacio para el MiniPlayer
         ) {
             GreetingHeader(name = "Diego Medina")
             Spacer(modifier = Modifier.height(24.dp))
@@ -104,12 +104,14 @@ fun HomeScreen(navController: NavController, viewModel: AlbumViewModel) {
             }
         }
 
-        // MiniPlayer fijo en la parte inferior
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-        ) {
-            MiniPlayer(album = firstAlbum)
+        if (firstAlbum != null) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 16.dp)
+            ) {
+                MiniPlayer(album = firstAlbum)
+            }
         }
     }
 }
@@ -138,7 +140,7 @@ fun GreetingHeader(name: String) {
                 color = Color.White
             )
         }
-        IconButton(onClick = { /* Acción de búsqueda */ }) {
+        IconButton(onClick = { }) {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
@@ -174,60 +176,6 @@ fun RecentlyPlayedItem(album: Album, onClick: () -> Unit) {
             }
             IconButton(onClick = { /* menú */ }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Opciones")
-            }
-        }
-    }
-}
-
-@Composable
-fun MiniPlayer(album: Album?) {
-    if (album == null) return
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .padding(horizontal = 12.dp, vertical = 8.dp), // separa del borde inferior
-        color = Color(0xFF6A1B9A), // fondo púrpura
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = rememberAsyncImagePainter(album.image),
-                    contentDescription = album.title,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .padding(end = 8.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Column {
-                    Text(
-                        text = album.title,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = album.artist,
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.7f)
-                    )
-                }
-            }
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Play",
-                    tint = Color.White
-                )
             }
         }
     }
